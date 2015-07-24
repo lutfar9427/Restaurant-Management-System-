@@ -12,7 +12,8 @@ public class MySQLAccess {
 	private PreparedStatement preparedStatement = null;
 	private ResultSet resultSet = null;
 
-	public void readDataBase() throws Exception {
+	public boolean readDataBase(String em,String pw, boolean checkPw) throws Exception {
+		
 		try {
 			// This will load the MySQL driver, each DB has its own driver
 			Class.forName("com.mysql.jdbc.Driver");
@@ -30,18 +31,58 @@ public class MySQLAccess {
 		//	writeResultSet(resultSet);
 
 			// PreparedStatements can use variables and are more efficient
-			preparedStatement = connect
-					.prepareStatement("insert into  users.registered_users values ( ?, ?)");
-			// "myuser, webpage, datum, summary, COMMENTS from feedback.comments");
-			// Parameters start with 1
-			preparedStatement.setString(1, "Waleed.adel@gmail.com");
-			preparedStatement.setString(2, "waleed3333");
-			preparedStatement.executeUpdate();
+		
+			
+//			preparedStatement = connect
+//					.prepareStatement("insert into  users.registered_users values ( ?, ?)");
+//			// "myuser, webpage, datum, summary, COMMENTS from feedback.comments");
+//			// Parameters start with 1
+//			preparedStatement.setString(1, "Waleed.adel@gmail.com");
+//			preparedStatement.setString(2, "waleed3333");
+//			preparedStatement.executeUpdate();
 
-		//	preparedStatement = connect
-		//			.prepareStatement("SELECT myuser, webpage, datum, summary, COMMENTS from feedback.comments");
-	//		resultSet = preparedStatement.executeQuery();
-	//		writeResultSet(resultSet);
+			
+			if(checkPw){
+			preparedStatement = connect
+					.prepareStatement("select email, password from users.registered_users" +
+							" Where password = ? And email= ?");
+			preparedStatement.setString(1, pw);
+			preparedStatement.setString(2, em);
+			
+			}
+			else{
+				
+				preparedStatement = connect
+						.prepareStatement("select email, password from users.registered_users" +
+								" Where email= ?");
+				preparedStatement.setString(1, em);
+				
+			}
+			
+			
+			
+			
+ 		resultSet=preparedStatement.executeQuery();
+ 		
+ 		//System.out.println(resultSet.next());  // check found or not
+ 		
+ 		
+ 		return resultSet.next();
+ 		
+        //  writeResultSet(resultSet);
+			
+			
+			
+			
+			
+			
+			
+			
+			
+//			preparedStatement = connect
+//					.prepareStatement("SELECT myuser, webpage, datum, summary, COMMENTS from feedback.comments");
+//			resultSet = preparedStatement.executeQuery();
+//			writeResultSet(resultSet);
 
 			// Remove again the insert comment
 //			preparedStatement = connect
@@ -85,16 +126,11 @@ public class MySQLAccess {
 			// also possible to get the columns via the column number
 			// which starts at 1
 			// e.g. resultSet.getSTring(2);
-			String user = resultSet.getString("myuser");
-			String website = resultSet.getString("webpage");
-			String summary = resultSet.getString("summary");
-			Date date = resultSet.getDate("datum");
-			String comment = resultSet.getString("comments");
-			System.out.println("User: " + user);
-			System.out.println("Website: " + website);
-			System.out.println("summary: " + summary);
-			System.out.println("Date: " + date);
-			System.out.println("Comment: " + comment);
+			String email = resultSet.getString("email");
+			String password = resultSet.getString("password");
+				System.out.println("email: " + email);
+			System.out.println("password: " + password);
+			
 		}
 	}
 
@@ -117,4 +153,52 @@ public class MySQLAccess {
 		}
 	}
 
+	
+	
+	
+	
+	
+	public void writeToDataBase(String email, String password) throws Exception {
+
+
+		
+		try {
+			// This will load the MySQL driver, each DB has its own driver
+			Class.forName("com.mysql.jdbc.Driver");
+			// Setup the connection with the DB
+			connect = DriverManager
+					.getConnection("jdbc:mysql://localhost/users?"
+							+ "user=root&password=root");
+
+			// Statements allow to issue SQL queries to the database
+			statement = connect.createStatement();
+			
+			
+			preparedStatement = connect
+					.prepareStatement("insert into  users.registered_users values ( ?, ?)");
+			// "myuser, webpage, datum, summary, COMMENTS from feedback.comments");
+			// Parameters start with 1
+			preparedStatement.setString(1, email);
+			preparedStatement.setString(2, password);
+			preparedStatement.executeUpdate();
+		
+			
+			
+			
+			
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			close();
+		}
+
+	
+		
+		
+	}
+
+	
+	
+	
+	
 }
