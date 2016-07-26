@@ -20,7 +20,7 @@ public class Registeration {
 	private JFrame frame;
 	private JTextField textField;
 	private JPasswordField passwordField;
-
+	int cdsa;
 	
 
 	/**
