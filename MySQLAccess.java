@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.Date;
 
 public class MySQLAccess {
+	int dcs;
 	private Connection connect = null;
 	private Statement statement = null;
 	private PreparedStatement preparedStatement = null;
