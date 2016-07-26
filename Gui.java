@@ -16,6 +16,7 @@ import javax.swing.JPasswordField;
 
 
 public class Gui {
+	int ds;
 
 	private JFrame frame;
 	private JTextField textField;
